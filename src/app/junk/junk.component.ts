@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-
-const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+import { Router, RouterState } from '@angular/router';
 
 @Component({
   selector: 'app-junk',
@@ -11,29 +10,22 @@ const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA
 })
 export class JunkComponent implements OnInit {
 
-  lForm: FormGroup;
-  // data: any;
+  @Input()
+  showSideBar = false;
 
-  constructor(private lf: FormBuilder, private http: HttpClient) {
-    this.lForm = lf.group({
-      'email': [null, Validators.compose([Validators.required, Validators.email])],
-      'password': [null, Validators.required],
-      'rememberme': [false]
-    });
-  }
+  @Output()
+  sidebar = function (event) {
+    event.preventDefault();
+    console.log('clicked');
+    this.showSideBar = !this.showSideBar;
+  };
 
-  doLogin(post) {
-    const postbody = {
-      'email': post.email,
-      'password': post.password
-    };
-    this.http.post('http://localhost:3000/login', postbody).subscribe(data => {
-      sessionStorage.setItem('Authorization', data['Authorization']);
-      console.log(data);
-      console.log('Route to the home page');
-    });
-  }
+  @Output()
+  focusContent = function(event){
+    this.showSideBar = false;
+  };
 
+  constructor() { }
   ngOnInit() {
   }
 
